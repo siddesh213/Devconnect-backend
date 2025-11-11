@@ -12,11 +12,11 @@ const SendConnectionRequest= new mongoose.Schema({
     },
     Status:{
         type:String,
-        enum:{
-            values:["ignored","intersted","accepted","rejected"],
-            message:"{VALUE } is incorrect status type "
+      enum:{
+    values:["ignored", "interested", "accepted", "rejected"],
+    message:"{VALUE} is incorrect status type"
+},
 
-        },
         require:true
     }
 },{

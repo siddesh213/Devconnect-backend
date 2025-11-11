@@ -64,14 +64,26 @@ const UserSchema = new mongoose.Schema({
       message: "Age must be an integer"
     }
   },
-
-  PhotoUrl: {
-    type: String,
-    validate: {
-      validator: (value) => validator.isURL(value),
-      message: "Enter a valid PhotoUrl"
-    }
+PhotoUrl: {
+  type: String,
+  default: "",
+  validate: {
+    validator: (value) => {
+      return (
+        !value || // ✅ allow empty string (before upload)
+        value.startsWith("http://") || // ✅ allow full URL
+        value.startsWith("https://") || // ✅ allow HTTPS
+        value.startsWith("/uploads/") || // ✅ allow local file path
+        value.startsWith("data:image/") // ✅ allow base64 images
+      );
+    },
+    message: "Enter a valid PhotoUrl",
   },
+},
+
+
+
+
 
   About: {
     type: String,
@@ -96,22 +108,22 @@ const UserSchema = new mongoose.Schema({
 });
 
 // Create User model
+UserSchema.methods.getJWT = async function () {
+  const user = this;
+  const payload = { User_Id: user._id };
+  const SecretKey = "DevConnector@2004";
 
-UserSchema.methods.getJWT=async function () {
-  
-  const user=this
-  const payload={User_Id:user._id}
-  const SecreteKey="DevConnector@2004"
-  const token=jwt.sign(payload,SecreteKey,{expiresIn:"1d"})
-  
-return token
-}
-UserSchema.methods.VerifyPassword= async function(PassWord){
-  const MyPassword=this
-  const isStrongPassword=await bcrypt.compare(PassWord,MyPassword.PassWord)
-  return isStrongPassword
+  const token = jwt.sign(payload, SecretKey, { expiresIn: "1d" });
+  return token;
+};
 
-}
+UserSchema.methods.VerifyPassword = async function (PassWord) {
+  // `this` refers to the user document
+  const user = this;
+  const isMatch = await bcrypt.compare(PassWord, user.PassWord);
+  return isMatch;
+};
+
 const UserModel = mongoose.model("User", UserSchema);
 
 

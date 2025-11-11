@@ -4,7 +4,7 @@ const validator=require("validator")
 const ValidateSignupData=(req)=>{
     const {FirstName,LastName,EmailId,PassWord}=req.body
     if (!FirstName || !LastName || !EmailId|| !PassWord){
-        throw new Error("Please fill all required fields (FirstName,LastName,EmailId,PassWord,Gender)")
+        throw new Error("Please fill all required fields (FirstName,LastName,EmailId,PassWord)")
     }
 
  else if (!validator.isEmail(EmailId)){

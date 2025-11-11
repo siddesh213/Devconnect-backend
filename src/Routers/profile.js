@@ -2,6 +2,9 @@ const express=require("express")
 const ProfileRouter=express.Router()
 const {UserAuth}=require("../middlwares/auth.js")
 const {ValidateProfileEditData}=require("../utils/validation.js")
+const upload = require("../middlwares/upload.js");
+// const upload = require("../middlwares/multer");
+// const { UserModel } = require("../models/User");
 
 ProfileRouter.get("/profile/view", UserAuth,async(req, res) => {
     try {
@@ -36,4 +39,25 @@ ProfileRouter.patch("/profile/edit",UserAuth,async(req,res)=>{
     }
 
 })
-module.exports={ProfileRouter}
+ProfileRouter.post("/profile/upload", UserAuth, upload.single("photo"), async (req, res) => {
+  try {
+    if (!req.file) return res.status(400).send("No file uploaded");
+
+    const loggedInUser = req.User;
+
+    loggedInUser.PhotoUrl = `http://localhost:3000/uploads/${req.file.filename}`; // ✅ Full correct URL
+
+    await loggedInUser.save();
+
+    res.json({
+      message: "Photo uploaded successfully ✅",
+      data: loggedInUser,
+    });
+  } catch (err) {
+    res.status(500).send("Upload failed: " + err.message);
+  }
+});
+
+module.exports = { ProfileRouter };
+
+// module.exports={ProfileRouter}
