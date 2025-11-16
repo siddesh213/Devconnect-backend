@@ -45,7 +45,8 @@ ProfileRouter.post("/profile/upload", UserAuth, upload.single("photo"), async (r
 
     const loggedInUser = req.User;
 
-    loggedInUser.PhotoUrl = `http://localhost:3000/uploads/${req.file.filename}`; // ✅ Full correct URL
+loggedInUser.PhotoUrl = `http://13.60.226.82:3000/uploads/${req.file.filename}`;
+
 
     await loggedInUser.save();
 
