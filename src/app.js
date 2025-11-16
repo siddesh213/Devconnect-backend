@@ -4,9 +4,10 @@ const app = express();
 const { conncectdb } = require("./config/database");
 const cors = require("cors");
 app.use(cors({
-    origin:"http://localhost:5173",
-    credentials:true
+  origin: ["http://localhost:5173", "http://13.60.226.82"],
+  credentials: true,
 }));
+
 
 const cookie_parser = require("cookie-parser");
 
