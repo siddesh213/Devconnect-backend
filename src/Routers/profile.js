@@ -17,7 +17,7 @@ ProfileRouter.get("/profile/view", UserAuth,async(req, res) => {
     }
 });
 
-ProfileRouter.patch("/profile/edit",UserAuth,async(req,res)=>{
+ProfileRouter.put("/profile/edit",UserAuth,async(req,res)=>{
     try{
     const ValidateEProfileEdit=ValidateProfileEditData(req)
     if (!ValidateEProfileEdit){
